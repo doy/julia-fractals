@@ -1,0 +1,33 @@
+using Tk
+using Images
+using ImageView
+
+mandelbrot(z, c) = z.^2 + c
+
+img = [ Color.HSV(0, 0, 0) for x=1:1000, y=1:1000 ]
+c   = [ x + y*im for x=linspace(-2, 2, 1000), y=linspace(-2, 2, 1000) ]
+z   = c
+
+imgc, imgslice = view(img)
+
+for i = 1:90
+  z = mandelbrot(z, c)
+  img[abs(z) .> 50] = Color.HSV(i * 4, 1, 1)
+  view(imgc, img)
+end
+
+#If we are not in a REPL
+if (!isinteractive())
+
+    # Create a condition object
+    c = Condition()
+
+    # Get the main window (A Tk toplevel object)
+    win = toplevel(imgc)
+
+    # Notify the condition object when the window closes
+    bind(win, "<Destroy>", e->notify(c))
+
+    # Wait for the notification before proceeding ... 
+    wait(c)
+end
