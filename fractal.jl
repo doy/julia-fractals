@@ -2,6 +2,8 @@ using Tk
 using Images
 using ImageView
 
+iterations = 90
+
 mandelbrot(z, c) = z.^2 + c
 
 img = [ Color.HSV(0, 0, 0) for x=1:1000, y=1:1000 ]
@@ -10,9 +12,9 @@ z   = c
 
 imgc, imgslice = view(img)
 
-for i = 1:90
+for i = 1:iterations
   z = mandelbrot(z, c)
-  img[abs(z) .> 50] = Color.HSV(i * 4, 1, 1)
+  img[abs(z) .> 50] = Color.HSV(i * 360/iterations, 1, 1)
   view(imgc, img)
 end
 
