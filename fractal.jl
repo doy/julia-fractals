@@ -20,14 +20,14 @@ end
 if (!isinteractive())
 
     # Create a condition object
-    c = Condition()
+    cv = Condition()
 
     # Get the main window (A Tk toplevel object)
     win = toplevel(imgc)
 
     # Notify the condition object when the window closes
-    bind(win, "<Destroy>", e->notify(c))
+    bind(win, "<Destroy>", e->notify(cv))
 
     # Wait for the notification before proceeding ... 
-    wait(c)
+    wait(cv)
 end
