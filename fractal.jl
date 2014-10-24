@@ -3,12 +3,16 @@ using Images
 using ImageView
 
 iterations = 90
+imgsize = 1000
 
 mandelbrot(z, c) = z.^2 + c
 
-img = [ Color.HSV(0, 0, 0) for x=1:1000, y=1:1000 ]
-c   = [ x + y*im for x=linspace(-2, 2, 1000), y=linspace(-2, 2, 1000) ]
-z   = c
+img = [ Color.HSV(0, 0, 0) for x=1:imgsize, y=1:imgsize ]
+c = [
+    x + y*im
+        for x=linspace(-2.0, 2.0, imgsize), y=linspace(-2.0, 2.0, imgsize)
+]
+z = c
 
 imgc, imgslice = view(img)
 
