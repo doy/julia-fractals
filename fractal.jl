@@ -18,7 +18,7 @@ imgc, imgslice = view(img)
 
 for i = 1:iterations
   z = mandelbrot(z, c)
-  img[abs(z) .> 50] = Color.HSV(i * 360/iterations, 1, 1)
+  img[abs(z) .> 2] = Color.HSV(i * 360/iterations, 1, 1)
   view(imgc, img)
 end
 
