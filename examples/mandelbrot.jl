@@ -14,7 +14,8 @@ imgc, imgslice = view(img)
 
 for i = 1:iterations
   Fractal.step(m)
-  img[abs(m.z) .> 2] = Color.HSV(i * 360/iterations, 1, 1)
+  new_pixels = (abs(m.z) .> 2) & (img .== Color.HSV(0, 0, 0))
+  img[new_pixels] = Color.HSV(i * 360/iterations, 1, 1)
   view(imgc, img)
 end
 
