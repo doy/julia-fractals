@@ -8,7 +8,7 @@ iterations = 45
 imgsize = 500
 
 img = [ Color.HSV(0, 0, 0) for x=1:imgsize, y=1:imgsize ]
-m = Fractal.Mandelbrot(imgsize)
+m = Fractal.Mandelbrot{Float64}(imgsize)
 
 imgc, imgslice = view(img)
 

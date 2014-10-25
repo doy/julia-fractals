@@ -1,6 +1,6 @@
-type Mandelbrot
-    c::Array{Complex{Float64}, 2}
-    z::Array{Complex{Float64}, 2}
+type Mandelbrot{T <: FloatingPoint}
+    c::Array{Complex{T}, 2}
+    z::Array{Complex{T}, 2}
 
     Mandelbrot(imgsize) = (
         line = linspace(-2.0, 2.0, imgsize);
@@ -9,6 +9,6 @@ type Mandelbrot
     )
 end
 
-function step(m::Mandelbrot)
+function step{T <: FloatingPoint}(m::Mandelbrot{T})
     m.z = m.z.^2 + m.c
 end
