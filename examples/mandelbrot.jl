@@ -8,14 +8,13 @@ iterations = 45
 imgsize = 500
 
 img = [ Color.HSV(0, 0, 0) for x=1:imgsize, y=1:imgsize ]
-c = Fractal.complexplane(4.0, imgsize)
-z = c
+m = Fractal.Mandelbrot(imgsize)
 
 imgc, imgslice = view(img)
 
 for i = 1:iterations
-  z = Fractal.mandelbrot(z, c)
-  img[abs(z) .> 2] = Color.HSV(i * 360/iterations, 1, 1)
+  Fractal.step(m)
+  img[abs(m.z) .> 2] = Color.HSV(i * 360/iterations, 1, 1)
   view(imgc, img)
 end
 
