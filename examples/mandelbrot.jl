@@ -7,7 +7,7 @@ using FractalExplorer
 iterations = 45
 imgsize = (640, 480)
 
-imgc, imgslice = view([ HSV(0, 0, 0) for x=1:imgsize[1], y=1:imgsize[2] ])
+imgc, imgslice = view([ HSV(0, 0, 0) for y=1:imgsize[2], x=1:imgsize[1] ])
 FractalExplorer.render(imgc, iterations)
 
 #If we are not in a REPL

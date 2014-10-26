@@ -5,8 +5,8 @@ using Color
 
 function render(imgc, iterations = 45, make_c = z -> z, step = (z, c) -> z.^2 + c)
     imgsize = get_size(canvas(imgc))
-    img = [ HSV(0, 0, 0) for x=1:imgsize[2], y=1:imgsize[1] ]
-    f = FractalExplorer.Fractal{Float64}((imgsize[2], imgsize[1]), make_c, step)
+    img = [ HSV(0, 0, 0) for y=1:imgsize[1], x=1:imgsize[2] ]
+    f = FractalExplorer.Fractal{Float64}(imgsize, make_c, step)
 
     for i = 1:iterations
         FractalExplorer.step(f)
