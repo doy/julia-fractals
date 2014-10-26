@@ -2,19 +2,19 @@ using Tk
 using Images
 using ImageView
 
-using Fractal
+using FractalExplorer
 
 iterations = 45
 imgsize = 500
 
 img = [ Color.HSV(0, 0, 0) for x=1:imgsize, y=1:imgsize ]
-m = Fractal.Mandelbrot{Float64}(imgsize)
+mandelbrot = FractalExplorer.Fractal{Float64}(imgsize)
 
 imgc, imgslice = view(img)
 
 for i = 1:iterations
-  Fractal.step(m)
-  new_pixels = (abs(m.z) .> 2) & (img .== Color.HSV(0, 0, 0))
+  FractalExplorer.step(mandelbrot)
+  new_pixels = (abs(mandelbrot.z) .> 2) & (img .== Color.HSV(0, 0, 0))
   img[new_pixels] = Color.HSV(i * 360/iterations, 1, 1)
   view(imgc, img)
 end
