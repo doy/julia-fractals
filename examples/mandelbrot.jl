@@ -8,7 +8,7 @@ iterations = 45
 imgsize = (640, 480)
 
 imgc, imgslice = view([ HSV(0, 0, 0) for y=1:imgsize[2], x=1:imgsize[1] ])
-FractalExplorer.render(imgc, iterations)
+mandelbrot(imgc, iterations)
 
 #If we are not in a REPL
 if (!isinteractive())
