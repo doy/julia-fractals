@@ -5,9 +5,9 @@ using ImageView
 using FractalExplorer
 
 iterations = 45
-imgsize = 500
+imgsize = (640, 480)
 
-img = [ Color.HSV(0, 0, 0) for x=1:imgsize, y=1:imgsize ]
+img = [ Color.HSV(0, 0, 0) for x=1:imgsize[1], y=1:imgsize[2] ]
 mandelbrot = FractalExplorer.Fractal{Float64}(imgsize)
 
 imgc, imgslice = view(img)
