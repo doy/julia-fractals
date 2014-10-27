@@ -13,8 +13,16 @@ type FractalCanvas
         f = FractalExplorer.Fractal{Float64}(winsize, make_c, step)
         image = [ HSV(0, 0, 0) for y=1:winsize[1], x=1:winsize[2] ]
         fc = new(c, f, image)
-        redraw(fc)
-        setup_handlers(c)
+        imgc, imgslice = redraw(fc)
+        c.draw = function(x)
+            props = Dict()
+            img2 = ImageView.ImageSlice2d(fc.image, props)
+            imgc = ImageView.ImageCanvas(ImageView.cairo_format(fc.image), props)
+            imgc.c = fc.c
+            ImageView.allocate_surface!(imgc, winsize[2], winsize[1])
+            ImageView.rerender(imgc, img2)
+            ImageView.resize(imgc, img2)
+        end
         return fc
     end
 end
@@ -65,9 +73,6 @@ function createwindow(winsize::(Integer, Integer) = (640, 480))
     set_visible(win, true)
     view(canvas, [ 0.0 for y=1:winsize[2], x=1:winsize[1] ], interactive=false)
     return canvas
-end
-
-function setup_handlers(c::Canvas)
 end
 
 function redraw(fc::FractalCanvas)
