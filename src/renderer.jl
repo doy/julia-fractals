@@ -13,7 +13,7 @@ type FractalCanvas
         f = FractalExplorer.Fractal{Float64}(winsize, make_c, step)
         image = [ HSV(0, 0, 0) for y=1:winsize[1], x=1:winsize[2] ]
         fc = new(c, f, image)
-        imgc, imgslice = redraw(fc)
+        redraw(fc)
         c.draw = function(x)
             props = Dict()
             img2 = ImageView.ImageSlice2d(fc.image, props)
