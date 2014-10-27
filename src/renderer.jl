@@ -71,7 +71,9 @@ function createwindow(winsize::(Integer, Integer) = (640, 480))
     canvas = Canvas(frame, winsize[1], winsize[2])
     pack(canvas, expand=true, fill="both")
     set_visible(win, true)
-    view(canvas, [ 0.0 for y=1:winsize[2], x=1:winsize[1] ], interactive=false)
+    # XXX this is needed because not calling view before get_size causes things
+    # to fail for some reason? it shouldn't be necessary otherwise
+    view(canvas, [ HSV(0, 0, 0) for y=1:winsize[2], x=1:winsize[1] ], interactive=false)
     return canvas
 end
 
