@@ -3,7 +3,11 @@ type Fractal{T <: FloatingPoint}
     c::Array{Complex{T}, 2}
     step::Function
 
-    function Fractal(imgsize, make_c = z -> z, step = (z, c) -> z.^2 + c)
+    function Fractal(
+        imgsize::(Integer, Integer),
+        make_c::Function,
+        step::Function
+    )
         (size_y, size_x) = imgsize
         aspect_ratio = size_y / size_x
         if size_x < size_y
