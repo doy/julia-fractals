@@ -14,6 +14,13 @@ function renderfractal(imgc, iterations, make_c, step)
         img[new_pixels] = HSV(i * 360/iterations, 1, 1)
         view(imgc, img)
     end
+
+    if (!isinteractive())
+        cv = Condition()
+        win = toplevel(imgc)
+        bind(win, "<Destroy>", e->notify(cv))
+        wait(cv)
+    end
 end
 
 function mandelbrot(imgc, iterations = 45)
