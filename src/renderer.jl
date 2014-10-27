@@ -23,6 +23,7 @@ type FractalCanvas
             ImageView.rerender(imgc, img2)
             ImageView.resize(imgc, img2)
         end
+        bind(c, "<Double-Button-1>", (path,x,y)->fractal(c, make_c, step, false))
         return fc
     end
 end
@@ -39,7 +40,7 @@ end
 
 fractal(make_c, step) = fractal(createwindow(), make_c, step)
 fractal(fc::FractalCanvas, make_c, step) = fractal(fc.c, make_c, step)
-function fractal(canvas::Canvas, make_c::Function, step::Function)
+function fractal(canvas::Canvas, make_c::Function, step::Function, should_wait=!isinteractive())
     fc = FractalCanvas(canvas, make_c, step)
 
     i = 0
@@ -54,7 +55,7 @@ function fractal(canvas::Canvas, make_c::Function, step::Function)
         end
     end
 
-    if (!isinteractive())
+    if should_wait
         cv = Condition()
         win = Tk.toplevel(fc.c)
         bind(win, "<Destroy>", e->notify(cv))
