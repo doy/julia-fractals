@@ -3,6 +3,17 @@ using Images
 using ImageView
 using Color
 
+mandelbrot() = mandelbrot(createwindow())
+function mandelbrot(canvas)
+    fractal(canvas, z -> z, (z, c) -> z.^2 + c)
+end
+
+julia(c = 0) = julia(createwindow(), c)
+function julia(canvas, c = 0)
+    fractal(canvas, z -> c, (z, c) -> z.^2 + c)
+end
+
+fractal(make_c, step) = fractal(createwindow(), make_c, step)
 function fractal(canvas, make_c, step)
     imgsize = get_size(canvas)
     img = [ HSV(0, 0, 0) for y=1:imgsize[1], x=1:imgsize[2] ]
@@ -30,10 +41,13 @@ function fractal(canvas, make_c, step)
     end
 end
 
-function mandelbrot(canvas)
-    fractal(canvas, z -> z, (z, c) -> z.^2 + c)
-end
-
-function julia(canvas, c = 0)
-    fractal(canvas, z -> c, (z, c) -> z.^2 + c)
+function createwindow(winsize = (640, 480))
+    win = Toplevel("FractalExplorer", winsize[1], winsize[2], false)
+    frame = Frame(win)
+    pack(frame, expand=true, fill="both")
+    canvas = Canvas(frame, winsize[1], winsize[2])
+    pack(canvas, expand=true, fill="both")
+    set_visible(win, true)
+    view(canvas, [ 0.0 for y=1:winsize[2], x=1:winsize[1] ], interactive=false)
+    return canvas
 end
