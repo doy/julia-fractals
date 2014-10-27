@@ -1,5 +1,5 @@
 module FractalExplorer
-export renderfractal, mandelbrot, julia
+export fractal, mandelbrot, julia
 include("fractal.jl")
 include("renderer.jl")
 end

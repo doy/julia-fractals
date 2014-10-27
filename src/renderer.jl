@@ -3,7 +3,7 @@ using Images
 using ImageView
 using Color
 
-function renderfractal(canvas, iterations, make_c, step)
+function fractal(canvas, iterations, make_c, step)
     imgsize = get_size(canvas)
     img = [ HSV(0, 0, 0) for y=1:imgsize[1], x=1:imgsize[2] ]
     view(canvas, img, interactive=false)
@@ -26,9 +26,9 @@ function renderfractal(canvas, iterations, make_c, step)
 end
 
 function mandelbrot(canvas, iterations = 45)
-    renderfractal(canvas, iterations, z -> z, (z, c) -> z.^2 + c)
+    fractal(canvas, iterations, z -> z, (z, c) -> z.^2 + c)
 end
 
 function julia(canvas, iterations = 45, c = 0)
-    renderfractal(canvas, iterations, z -> c, (z, c) -> z.^2 + c)
+    fractal(canvas, iterations, z -> c, (z, c) -> z.^2 + c)
 end
