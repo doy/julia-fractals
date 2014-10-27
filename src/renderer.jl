@@ -12,9 +12,10 @@ type FractalCanvas
         winsize = tuple(get_size(c)...)
         f = FractalExplorer.Fractal{Float64}(winsize, make_c, step)
         image = [ HSV(0, 0, 0) for y=1:winsize[1], x=1:winsize[2] ]
-        view(c, image, interactive=false)
+        fc = new(c, f, image)
+        redraw(fc)
         setup_handlers(c)
-        return new(c, f, image)
+        return fc
     end
 end
 
@@ -39,7 +40,7 @@ function fractal(canvas::Canvas, make_c::Function, step::Function)
         new_pixels = (abs(fc.f.z) .> 2) & (fc.image .== HSV(0, 0, 0))
         fc.image[new_pixels] = HSV(i * 4, 1, 1)
         i = i + 1
-        view(fc.c, fc.image, interactive=false)
+        redraw(fc)
         if length(find(new_pixels)) <= 1
             break
         end
@@ -67,4 +68,8 @@ function createwindow(winsize::(Integer, Integer) = (640, 480))
 end
 
 function setup_handlers(c::Canvas)
+end
+
+function redraw(fc::FractalCanvas)
+    return view(fc.c, fc.image, interactive=false)
 end
