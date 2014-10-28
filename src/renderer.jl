@@ -9,7 +9,7 @@ type FractalCanvas
     image::Array{HSV{Float64}, 2}
 
     function FractalCanvas(c::Canvas, bb::Base.Graphics.BoundingBox, make_c::Function, step::Function)
-        winsize = tuple(get_size(c)...)
+        winsize = tuple((get_size(c) * 2)...)
         f = FractalExplorer.Fractal{Float64}(winsize, bb, make_c, step)
         image = [ HSV(0, 0, 0) for y=1:winsize[2], x=1:winsize[1] ]
         fc = new(c, f, image)
@@ -25,7 +25,7 @@ type FractalCanvas
         bind(c, "<Double-Button-1>", (path,x,y)->fractal(c, make_c, step, false))
         c.mouse.button1press = function(c, x, y)
             function rubberband_end(c, bb)
-                (size_x, size_y) = tuple(get_size(c)...)
+                (size_x, size_y) = tuple((get_size(c) * 2)...)
                 win_aspect_ratio = size_x / size_y
                 box_aspect_ratio = (bb.xmax - bb.xmin) / (bb.ymax - bb.ymin)
                 line_x = linspace(fc.f.bb.xmin, fc.f.bb.xmax, size_x)
