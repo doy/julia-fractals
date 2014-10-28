@@ -25,6 +25,9 @@ type FractalCanvas
             ImageView.resize(imgc, img2)
         end
         bind(c, "<Double-Button-1>", function(path,x,y)
+            if isready(rref)
+                take!(rref)
+            end
             put!(rref, true)
             fractal(c, make_c, step, false)
         end)
@@ -48,9 +51,16 @@ type FractalCanvas
                     xmax = xmin + (ymax - ymin)
                 end
                 range = Base.Graphics.BoundingBox(xmin, xmax, ymin, ymax)
+                if isready(rref)
+                    take!(rref)
+                end
                 put!(rref, true)
                 fractal(c, make_c, step, false, range=range)
             end
+            if isready(rref)
+                take!(rref)
+            end
+            put!(rref, true)
             ImageView.rubberband_start(c, x, y, rubberband_end)
         end
         return fc
