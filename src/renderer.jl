@@ -28,6 +28,7 @@ type FractalCanvas
             stoprendering(rref)
             fractal(c, make_c, step, false)
         end)
+        c.mouse.button2press = (c, x, y) -> stoprendering(rref)
         c.mouse.button1press = function(c, x, y)
             function rubberband_end(c, bb)
                 (size_x, size_y) = tuple((get_size(c) * 2)...)
