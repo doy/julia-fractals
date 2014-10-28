@@ -8,7 +8,7 @@ type FractalCanvas
     f::FractalExplorer.Fractal
     image::Array{HSV{Float64}, 2}
 
-    function FractalCanvas(c::Canvas, bb::Base.Graphics.BoundingBox, make_c::Function, step::Function)
+    function FractalCanvas(c::Canvas, bb::Base.Graphics.BoundingBox, make_c::Function, step::Function; rref=RemoteRef())
         winsize = tuple((get_size(c) * 2)...)
         f = FractalExplorer.Fractal{Float64}(winsize, bb, make_c, step)
         image = [ HSV(0, 0, 0) for y=1:winsize[2], x=1:winsize[1] ]
@@ -22,7 +22,10 @@ type FractalCanvas
             ImageView.rerender(imgc, img2)
             ImageView.resize(imgc, img2)
         end
-        bind(c, "<Double-Button-1>", (path,x,y)->fractal(c, make_c, step, false))
+        bind(c, "<Double-Button-1>", function(path,x,y)
+            put!(rref, true)
+            fractal(c, make_c, step, false)
+        end)
         c.mouse.button1press = function(c, x, y)
             function rubberband_end(c, bb)
                 (size_x, size_y) = tuple((get_size(c) * 2)...)
@@ -43,6 +46,7 @@ type FractalCanvas
                     xmax = xmin + (ymax - ymin)
                 end
                 bb = Base.Graphics.BoundingBox(xmin, xmax, ymin, ymax)
+                put!(rref, true)
                 fractal(c, make_c, step, false, bb)
             end
             ImageView.rubberband_start(c, x, y, rubberband_end)
@@ -64,7 +68,8 @@ end
 fractal(make_c, step) = fractal(createwindow(), make_c, step)
 fractal(fc::FractalCanvas, make_c, step) = fractal(fc.c, make_c, step)
 function fractal(canvas::Canvas, make_c::Function, step::Function, should_wait=!isinteractive(), bb=Base.Graphics.BoundingBox(-2.0, 2.0, -2.0, 2.0))
-    fc = FractalCanvas(canvas, bb, make_c, step)
+    rref = RemoteRef()
+    fc = FractalCanvas(canvas, bb, make_c, step, rref=rref)
 
     saw_some_pixels = false
     for i in 1:1000
@@ -73,6 +78,9 @@ function fractal(canvas::Canvas, make_c::Function, step::Function, should_wait=!
         new_pixels = diverging_pixels & (fc.image .== HSV(0, 0, 0))
         fc.image[new_pixels] = HSV(i * 4, 1, 1)
         redraw(fc)
+        if isready(rref)
+            break
+        end
         if saw_some_pixels && length(find(new_pixels)) <= 1
             break
         end
