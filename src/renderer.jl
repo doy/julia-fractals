@@ -23,6 +23,20 @@ type FractalCanvas
             ImageView.resize(imgc, img2)
         end
         bind(c, "<Double-Button-1>", (path,x,y)->fractal(c, make_c, step, false))
+        c.mouse.button1press = function(c, x, y)
+            function rubberband_end(c, bb)
+                (size_x, size_y) = tuple(get_size(c)...)
+                line_x = linspace(fc.f.bb.xmin, fc.f.bb.xmax, size_x)
+                line_y = linspace(fc.f.bb.ymin, fc.f.bb.ymax, size_y)
+                plane = [ (x, y) for x=line_x, y=line_y ]
+                bb = Base.Graphics.BoundingBox(
+                    plane[bb.xmin, bb.ymin][1], plane[bb.xmax, bb.ymax][1],
+                    plane[bb.xmin, bb.ymin][2], plane[bb.xmax, bb.ymax][2],
+                )
+                fractal(c, make_c, step, false, bb)
+            end
+            ImageView.rubberband_start(c, x, y, rubberband_end)
+        end
         return fc
     end
 end
