@@ -3,6 +3,8 @@ using Images
 using ImageView
 using Color
 
+default_range = Base.Graphics.BoundingBox(-2.0, 2.0, -2.0, 2.0)
+
 type FractalCanvas
     c::Canvas
     f::FractalExplorer.Fractal
@@ -45,9 +47,9 @@ type FractalCanvas
                     ymax = plane[bb.xmax, bb.ymax][2]
                     xmax = xmin + (ymax - ymin)
                 end
-                bb = Base.Graphics.BoundingBox(xmin, xmax, ymin, ymax)
+                range = Base.Graphics.BoundingBox(xmin, xmax, ymin, ymax)
                 put!(rref, true)
-                fractal(c, make_c, step, false, bb)
+                fractal(c, make_c, step, false, range=range)
             end
             ImageView.rubberband_start(c, x, y, rubberband_end)
         end
@@ -55,21 +57,22 @@ type FractalCanvas
     end
 end
 
-mandelbrot(fc::FractalCanvas) = mandelbrot(fc.c)
-function mandelbrot(canvas::Canvas = createwindow())
-    return fractal(canvas, z -> z, (z, c) -> z.^2 + c)
+mandelbrot(fc::FractalCanvas; range=default_range) = mandelbrot(fc.c)
+function mandelbrot(canvas::Canvas = createwindow(); range=default_range)
+    return fractal(canvas, z -> z, (z, c) -> z.^2 + c, range=range)
 end
 
-julia(fc::FractalCanvas, c = 0) = julia(fc.c, c)
-function julia(canvas::Canvas = createwindow(), c::Union(Number, Array{Number, 2}) = 0)
-    return fractal(canvas, z -> c, (z, c) -> z.^2 + c)
+julia(fc::FractalCanvas, c = 0) = julia(fc.c, c; range=default_range)
+julia(c = 0) = julia(createwindow(), c)
+function julia(canvas::Canvas = createwindow(), c::Union(Number, Array{Number, 2}) = 0; range=default_range)
+    return fractal(canvas, z -> c, (z, c) -> z.^2 + c, range=range)
 end
 
-fractal(make_c, step) = fractal(createwindow(), make_c, step)
-fractal(fc::FractalCanvas, make_c, step) = fractal(fc.c, make_c, step)
-function fractal(canvas::Canvas, make_c::Function, step::Function, should_wait=!isinteractive(), bb=Base.Graphics.BoundingBox(-2.0, 2.0, -2.0, 2.0))
+fractal(make_c, step) = fractal(createwindow(), make_c, step; range=default_range)
+fractal(fc::FractalCanvas, make_c, step) = fractal(fc.c, make_c, step; range=default_range)
+function fractal(canvas::Canvas, make_c::Function, step::Function, should_wait=!isinteractive(); range=default_range)
     rref = RemoteRef()
-    fc = FractalCanvas(canvas, bb, make_c, step, rref=rref)
+    fc = FractalCanvas(canvas, range, make_c, step, rref=rref)
 
     saw_some_pixels = false
     for i in 1:1000
