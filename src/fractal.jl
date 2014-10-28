@@ -5,19 +5,18 @@ type Fractal{T <: FloatingPoint}
 
     function Fractal(
         imgsize::(Integer, Integer),
-        range::(T, T, T, T),
+        bb::Base.Graphics.BoundingBox,
         make_c::Function,
         step::Function
     )
-        (ul_x, ul_y, width, height) = range
         (size_x, size_y) = imgsize
         aspect_ratio = size_y / size_x
         if size_x < size_y
-            range_x = (ul_x, ul_x + width)
-            range_y = (ul_y, ul_y + height * aspect_ratio)
+            range_x = (bb.xmin, bb.xmax)
+            range_y = (bb.ymin, bb.ymin + (bb.ymax - bb.ymin) * aspect_ratio)
         else
-            range_x = (ul_x, ul_x + width / aspect_ratio)
-            range_y = (ul_y, ul_y + height)
+            range_x = (bb.xmin, bb.xmin + (bb.xmax - bb.xmin) / aspect_ratio)
+            range_y = (bb.ymin, bb.ymax)
         end
         line_x = linspace(range_x[1], range_x[2], size_x)
         line_y = linspace(range_y[1], range_y[2], size_y)
