@@ -26,13 +26,23 @@ type FractalCanvas
         c.mouse.button1press = function(c, x, y)
             function rubberband_end(c, bb)
                 (size_x, size_y) = tuple(get_size(c)...)
+                win_aspect_ratio = size_x / size_y
+                box_aspect_ratio = (bb.xmax - bb.xmin) / (bb.ymax - bb.ymin)
                 line_x = linspace(fc.f.bb.xmin, fc.f.bb.xmax, size_x)
                 line_y = linspace(fc.f.bb.ymin, fc.f.bb.ymax, size_y)
                 plane = [ (x, y) for x=line_x, y=line_y ]
-                bb = Base.Graphics.BoundingBox(
-                    plane[bb.xmin, bb.ymin][1], plane[bb.xmax, bb.ymax][1],
-                    plane[bb.xmin, bb.ymin][2], plane[bb.xmax, bb.ymax][2],
-                )
+                if box_aspect_ratio > win_aspect_ratio
+                    xmin = plane[bb.xmin, bb.ymin][1]
+                    xmax = plane[bb.xmax, bb.ymax][1]
+                    ymin = plane[bb.xmin, bb.ymin][2]
+                    ymax = ymin + (xmax - xmin)
+                else
+                    xmin = plane[bb.xmin, bb.ymin][1]
+                    ymin = plane[bb.xmin, bb.ymin][2]
+                    ymax = plane[bb.xmax, bb.ymax][2]
+                    xmax = xmin + (ymax - ymin)
+                end
+                bb = Base.Graphics.BoundingBox(xmin, xmax, ymin, ymax)
                 fractal(c, make_c, step, false, bb)
             end
             ImageView.rubberband_start(c, x, y, rubberband_end)
