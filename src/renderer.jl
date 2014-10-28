@@ -42,15 +42,18 @@ fractal(fc::FractalCanvas, make_c, step) = fractal(fc.c, make_c, step)
 function fractal(canvas::Canvas, make_c::Function, step::Function, should_wait=!isinteractive(), range=(-2.0, -2.0, 4.0, 4.0))
     fc = FractalCanvas(canvas, range, make_c, step)
 
-    i = 0
-    while true
+    saw_some_pixels = false
+    for i in 1:1000
         FractalExplorer.step(fc.f)
-        new_pixels = (abs(fc.f.z) .> 2) & (fc.image .== HSV(0, 0, 0))
+        diverging_pixels = (abs(fc.f.z) .> 2)
+        new_pixels = diverging_pixels & (fc.image .== HSV(0, 0, 0))
         fc.image[new_pixels] = HSV(i * 4, 1, 1)
-        i = i + 1
         redraw(fc)
-        if length(find(new_pixels)) <= 1
+        if saw_some_pixels && length(find(new_pixels)) <= 1
             break
+        end
+        if length(find(diverging_pixels)) > 0
+            saw_some_pixels = true
         end
     end
 
