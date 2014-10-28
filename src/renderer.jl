@@ -8,9 +8,9 @@ type FractalCanvas
     f::FractalExplorer.Fractal
     image::Array{HSV{Float64}, 2}
 
-    function FractalCanvas(c::Canvas, make_c::Function, step::Function)
+    function FractalCanvas(c::Canvas, range::(Float64, Float64, Float64, Float64), make_c::Function, step::Function)
         winsize = tuple(get_size(c)...)
-        f = FractalExplorer.Fractal{Float64}(winsize, make_c, step)
+        f = FractalExplorer.Fractal{Float64}(winsize, range, make_c, step)
         image = [ HSV(0, 0, 0) for y=1:winsize[2], x=1:winsize[1] ]
         fc = new(c, f, image)
         c.draw = function(x)
@@ -39,8 +39,8 @@ end
 
 fractal(make_c, step) = fractal(createwindow(), make_c, step)
 fractal(fc::FractalCanvas, make_c, step) = fractal(fc.c, make_c, step)
-function fractal(canvas::Canvas, make_c::Function, step::Function, should_wait=!isinteractive())
-    fc = FractalCanvas(canvas, make_c, step)
+function fractal(canvas::Canvas, make_c::Function, step::Function, should_wait=!isinteractive(), range=(-2.0, -2.0, 4.0, 4.0))
+    fc = FractalCanvas(canvas, range, make_c, step)
 
     i = 0
     while true
