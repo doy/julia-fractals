@@ -25,10 +25,7 @@ type FractalCanvas
             ImageView.resize(imgc, img2)
         end
         bind(c, "<Double-Button-1>", function(path,x,y)
-            if isready(rref)
-                take!(rref)
-            end
-            put!(rref, true)
+            stoprendering(rref)
             fractal(c, make_c, step, false)
         end)
         c.mouse.button1press = function(c, x, y)
@@ -51,16 +48,10 @@ type FractalCanvas
                     xmax = xmin + (ymax - ymin)
                 end
                 range = Base.Graphics.BoundingBox(xmin, xmax, ymin, ymax)
-                if isready(rref)
-                    take!(rref)
-                end
-                put!(rref, true)
+                stoprendering(rref)
                 fractal(c, make_c, step, false, range=range)
             end
-            if isready(rref)
-                take!(rref)
-            end
-            put!(rref, true)
+            stoprendering(rref)
             ImageView.rubberband_start(c, x, y, rubberband_end)
         end
         return fc
@@ -127,4 +118,11 @@ end
 
 function redraw(fc::FractalCanvas)
     return view(fc.c, fc.image, interactive=false)
+end
+
+function stoprendering(rref::RemoteRef)
+    if isready(rref)
+        take!(rref)
+    end
+    put!(rref, true)
 end
