@@ -11,14 +11,14 @@ type FractalCanvas
     function FractalCanvas(c::Canvas, make_c::Function, step::Function)
         winsize = tuple(get_size(c)...)
         f = FractalExplorer.Fractal{Float64}(winsize, make_c, step)
-        image = [ HSV(0, 0, 0) for y=1:winsize[1], x=1:winsize[2] ]
+        image = [ HSV(0, 0, 0) for y=1:winsize[2], x=1:winsize[1] ]
         fc = new(c, f, image)
         c.draw = function(x)
             props = Dict()
             img2 = ImageView.ImageSlice2d(fc.image, props)
             imgc = ImageView.ImageCanvas(ImageView.cairo_format(fc.image), props)
             imgc.c = fc.c
-            ImageView.allocate_surface!(imgc, winsize[2], winsize[1])
+            ImageView.allocate_surface!(imgc, winsize[1], winsize[2])
             ImageView.rerender(imgc, img2)
             ImageView.resize(imgc, img2)
         end

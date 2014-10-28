@@ -8,14 +8,14 @@ type Fractal{T <: FloatingPoint}
         make_c::Function,
         step::Function
     )
-        (size_y, size_x) = imgsize
+        (size_x, size_y) = imgsize
         aspect_ratio = size_y / size_x
         if size_x < size_y
-            range_x = (-2.0 * aspect_ratio, 2.0 * aspect_ratio)
-            range_y = (-2.0, 2.0)
-        else
             range_x = (-2.0, 2.0)
-            range_y = (-2.0 / aspect_ratio, 2.0 / aspect_ratio)
+            range_y = (-2.0 * aspect_ratio, 2.0 * aspect_ratio)
+        else
+            range_x = (-2.0 / aspect_ratio, 2.0 / aspect_ratio)
+            range_y = (-2.0, 2.0)
         end
         line_x = linspace(range_x[1], range_x[2], size_x)
         line_y = linspace(range_y[1], range_y[2], size_y)
